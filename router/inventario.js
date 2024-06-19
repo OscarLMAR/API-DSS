@@ -1,10 +1,11 @@
 const { Router} = require('express')
 const { check } = require('express-validator')
 const{crearInventario, updateInventario, getInventarios} = require('../controllers/InventarioController')
-
+const {validarJWT} = require('../middleware/validar-jwt')
+const {validarRolAdmin} = require('../middleware/validar-rol-admin')
 const router = Router();
 
-router.post('/', [
+router.post('/', [validarJWT, validarRolAdmin], [
     check('serial', 'invalid.serial').not().isEmpty(),
     check('modelo', 'invalid.modelo').not().isEmpty(),
     check('descripcion', 'invalid.descripcion').not().isEmpty(),
@@ -18,7 +19,7 @@ router.post('/', [
     check('tipoEquipo', 'invalid.tipoEquipo').not().isEmpty()
 ], crearInventario)
 
-router.put('/:id', [
+router.put('/:id', [validarJWT, validarRolAdmin], [
     check('serial', 'invalid.serial').not().isEmpty(),
     check('modelo', 'invalid.modelo').not().isEmpty(),
     check('descripcion', 'invalid.descripcion').not().isEmpty(),
@@ -32,7 +33,7 @@ router.put('/:id', [
     check('tipoEquipo', 'invalid.tipoEquipo').not().isEmpty()
 ], updateInventario)
 
-router.get('/', [
+router.get('/', [validarJWT],[
     check('serial', 'invalid.serial').not().isEmpty(),
     check('modelo', 'invalid.modelo').not().isEmpty(),
     check('descripcion', 'invalid.descripcion').not().isEmpty(),
